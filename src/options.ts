@@ -73,7 +73,9 @@ export function optionsFromURL (url: URL): Result<Options, Error> {
 
     const params = url.pathname.split('/').filter((v) => !! v)
 
-    if (params.length === 0 || params.length > 4) { return fail('Invalid number of parameters', params.length) }
+    if (params.length < 1 || params.length > 4) {
+        return fail('Invalid number of parameters', params.length)
+    }
 
     const last = params[params.length - 1]
     if (supportedFormats.has(last)) {
@@ -114,16 +116,30 @@ export function optionsFromURL (url: URL): Result<Options, Error> {
         const [width, height] = size.split('x').map((s) => parseInt(s, 10))
         if (width) {
             const w = Number(width)
-            if (! Number.isSafeInteger(w)) { return fail('Invalid width', width) }
-            if (w < minSize) { opts.width = minSize } else if (w > maxSize) { opts.width = maxSize } else { opts.width = w }
+            if (! Number.isSafeInteger(w)) {
+                return fail('Invalid width', width)
+            } else if (w < minSize) {
+                opts.width = minSize
+            } else if (w > maxSize) {
+                opts.width = maxSize
+            } else {
+                opts.width = w
+            }
             opts.scaledWidth = opts.width * opts.scale
         } else {
             return fail('Invalid width', width)
         }
         if (height) {
             const h = Number(height)
-            if (! Number.isSafeInteger(h)) { return fail('Invalid height', height) }
-            if (h < minSize) { opts.height = minSize } else if (h > maxSize) { opts.height = maxSize } else { opts.height = h }
+            if (! Number.isSafeInteger(h)) {
+                return fail('Invalid height', height)
+            } else if (h < minSize) {
+                opts.height = minSize
+            } else if (h > maxSize) {
+                opts.height = maxSize
+            } else {
+                opts.height = h
+            }
             opts.scaledHeight = opts.height * opts.scale
         } else if (size.includes('x')) {
             return fail('Invalid height', height)
