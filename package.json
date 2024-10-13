@@ -1,0 +1,33 @@
+{
+    "name": "placeholder",
+    "version": "0.0.0",
+    "main": "dist/index.js",
+    "scripts": {
+        "test": "jest",
+        "dev": "nodemon src/index.ts",
+        "start": "ts-node src/index.ts"
+    },
+    "keywords": [],
+    "author": "Kyriakos Nicola",
+    "license": "MIT",
+    "description": "",
+    "dependencies": {
+        "sharp": "^0.33.5",
+        "text-to-svg": "^3.1.5",
+        "tinycolor2": "^1.6.0"
+    },
+    "devDependencies": {
+        "@knicola/dev-config": "^0.3.2",
+        "@types/node": "^22.7.5",
+        "@types/sharp": "^0.31.1",
+        "@types/text-to-svg": "^3.1.4",
+        "@types/tinycolor2": "^1.4.6",
+        "eslint": "^8.57.1",
+        "jest": "^29.7.0",
+        "nodemon": "^3.1.7",
+        "ts-jest": "^29.2.5",
+        "ts-node": "^10.9.2",
+        "tsconfig-paths": "^4.2.0",
+        "typescript": "^5.6.3"
+    }
+}

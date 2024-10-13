@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@knicola/dev-config/tsconfig/node",
+  "compilerOptions": {
+    "types": [ "node", "jest" ],
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "baseUrl": ".",
+    "resolveJsonModule": true
+  },
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  },
+  "include": [ "**/*.ts", "**/*.js" ],
+  "exclude": [ "node_modules" ],
+}
