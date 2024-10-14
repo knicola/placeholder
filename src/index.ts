@@ -61,7 +61,7 @@ const server = http.createServer((req, res) => {
     })
 
     const svg =
-        `<svg width='${scaledWidth}' height='${scaledHeight}' viewbox='0 0 ${scaledWidth} ${scaledHeight}' xmlns='http://www.w3.org/2000/svg'>` +
+        `<svg xmlns='http://www.w3.org/2000/svg' width='${scaledWidth}' height='${scaledHeight}' viewBox='0 0 ${scaledWidth} ${scaledHeight}'>` +
           `<rect width='100%' height='100%' fill='${backgroundColor}' />` +
           `${path}` +
         '</svg>'
