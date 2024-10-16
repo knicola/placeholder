@@ -2,6 +2,8 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "@knicola/dev-config/tsconfig/node",
   "compilerOptions": {
+    "noEmit": true,
+    "checkJs": true,
     "types": [ "node", "jest" ],
     "paths": {
       "@/*": ["./src/*"]
@@ -12,6 +14,6 @@
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   },
-  "include": [ "**/*.ts", "**/*.js" ],
+  "include": [ "**/*.ts", "**/*.js", "**/*.mjs" ],
   "exclude": [ "node_modules" ],
 }
