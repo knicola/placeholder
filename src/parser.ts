@@ -243,7 +243,7 @@ export function parseURL (url: string): ParsedURL | null {
 
     const format = path.format ?? config.defaultFormat
     const background = path.background ?? config.defaultBackground
-    const foreground = path.foreground ?? ! path.background ? config.defaultForeground : getContrastColor(path.background)
+    const foreground = path.foreground ?? (! path.background ? config.defaultForeground : getContrastColor(path.background))
     const scale = clamp(path.scale ?? config.defaultScale, config.minScale, config.maxScale)
     const realWidth = clamp(path.width, config.minSize, config.maxSize)
     const realHeight = clamp(path.height ?? path.width, config.minSize, config.maxSize)
