@@ -4,6 +4,7 @@ import { Readable } from 'stream'
 import { parseURL } from './parser'
 import { config } from './config'
 import { generateSVGDocument, loadFonts, convertSVGToImage } from './placeholder'
+import type { AddressInfo } from 'net'
 
 function write (
     res: http.ServerResponse,
@@ -72,6 +73,7 @@ const server = http.createServer((req, res) => {
         .pipe(res)
 })
 
-server.listen(3000, () => {
-    console.log('Server running at http://localhost:3000')
+server.listen(config.port, config.host, () => {
+    const { address, port } = server.address() as AddressInfo
+    console.log(`Server running at http://${address}:${port}`)
 })

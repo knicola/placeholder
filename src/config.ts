@@ -1,4 +1,6 @@
 export const config = {
+    host: '0.0.0.0',
+    port: 3000,
     defaultScale: 1,
     defaultFont: 'Lato',
     defaultBackground: '#dddddd',
