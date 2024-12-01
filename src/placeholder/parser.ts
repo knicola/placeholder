@@ -1,4 +1,4 @@
-import { config } from './config'
+import { config } from '../config'
 import type { ImageFormat } from './placeholder'
 
 const isHexColor = (hex: string): boolean => /^#?[0-9a-f]{3,6}$/i.test(hex)

@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 import http from 'http'
 import { Readable } from 'stream'
-import { parseURL } from './parser'
+import { parseURL } from './placeholder/parser'
 import { config } from './config'
-import { generateSVGDocument, loadFonts, convertSVGToImage } from './placeholder'
+import { generateSVGDocument, loadFonts, convertSVGToImage } from './placeholder/placeholder'
 import type { AddressInfo } from 'net'
 
 function write (
