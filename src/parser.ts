@@ -1,4 +1,5 @@
 import { config } from './config'
+import type { ImageFormat } from './placeholder'
 
 const isHexColor = (hex: string): boolean => /^#?[0-9a-f]{3,6}$/i.test(hex)
 
@@ -218,7 +219,7 @@ const getContrastColor = (hex: string): string => {
 }
 
 export interface ParsedURL {
-    format: string
+    format: ImageFormat
     background: string
     foreground: string
     realWidth: number
@@ -241,7 +242,7 @@ export function parseURL (url: string): ParsedURL | null {
         return null
     }
 
-    const format = path.format ?? config.defaultFormat
+    const format = (path.format ?? config.defaultFormat) as ImageFormat
     const background = path.background ?? config.defaultBackground
     const foreground = path.foreground ?? (! path.background ? config.defaultForeground : getContrastColor(path.background))
     const scale = clamp(path.scale ?? config.defaultScale, config.minScale, config.maxScale)
