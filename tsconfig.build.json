@@ -1,17 +1,12 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "@knicola/dev-config/tsconfig/node",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
+    "strict": false,
+    "skipLibCheck": true,
     "removeComments": true,
     "noUnusedLocals": true,
-    "outDir": "lib/",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-    "baseUrl": "."
+    "outDir": "dist/",
   },
-  "ts-node": {
-    "require": ["tsconfig-paths/register"]
-  },
-  "include": [ "src/**/*.ts" ]
+  "include": ["src/**/*.ts", "src/**/*.js"],
 }
