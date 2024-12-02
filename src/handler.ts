@@ -1,9 +1,13 @@
 /* eslint-disable no-console */
 import { Readable } from 'stream'
 import http from 'http'
-import { parseURL } from './placeholder/parser'
-import { config } from './config'
-import { generateSVGDocument, loadFonts, convertSVGToImage } from './placeholder/placeholder'
+import { config } from '@/config'
+import {
+    loadFonts,
+    parseURL,
+    generateSVGDocument,
+    convertSVGToImage,
+} from '@/placeholder'
 
 // Utility function to send responses
 function write (

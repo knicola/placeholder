@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import http from 'http'
 import { AddressInfo } from 'net'
-import { requestHandler } from './handler'
-import { config } from './config'
+import { requestHandler } from '@/handler'
+import { config } from '@/config'
 
 const server = http.createServer(requestHandler)
 
