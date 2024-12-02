@@ -41,7 +41,7 @@ export function requestHandler (req: http.IncomingMessage, res: http.ServerRespo
         return write(res, 'No favicon', 404)
     }
 
-    const options = parseURL(req.url)
+    const options = parseURL(req.url, config)
     if (! options) {
         return write(res, 'Invalid URL', 400)
     }

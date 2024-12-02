@@ -1,5 +1,19 @@
-import { config } from '../config'
 import type { ImageFormat } from './placeholder'
+
+export interface ParserOptions {
+    colors: Map<string, string>
+    formats: Set<string>
+    fonts: Map<string, string>
+    defaultFormat: string
+    defaultBackground: string
+    defaultForeground: string
+    defaultScale: number
+    minScale: number
+    maxScale: number
+    minSize: number
+    maxSize: number
+    defaultFont: string
+}
 
 const isHexColor = (hex: string): boolean => /^#?[0-9a-f]{3,6}$/i.test(hex)
 
@@ -11,12 +25,12 @@ const formatHexColor = (hex: string): string => {
     return `#${hex}`
 }
 
-export function parseColor (color: string): string | null {
+export function parseColor (color: string, options: Pick<ParserOptions, 'colors'>): string | null {
     if (isHexColor(color)) {
         return formatHexColor(color)
     }
 
-    const hex = config.colors.get(color)
+    const hex = options.colors.get(color)
     if (hex) {
         return formatHexColor(hex)
     }
@@ -33,7 +47,7 @@ export interface ParsedPath {
     foreground?: string
 }
 
-export function parsePath (path: string): ParsedPath | null {
+export function parsePath (path: string, options: ParserOptions): ParsedPath | null {
     // remove leading slash
     if (path[0] === '/') {
         path = path.slice(1)
@@ -100,10 +114,10 @@ export function parsePath (path: string): ParsedPath | null {
         i++ // skip '/'
         const bg = extractAlphanumeric()
         if (bg !== null) {
-            if (i === path.length && config.formats.has(bg)) {
+            if (i === path.length && options.formats.has(bg)) {
                 res.format = bg
             } else {
-                const color = parseColor(bg)
+                const color = parseColor(bg, options)
                 if (color) {
                     res.background = color
                 } else {
@@ -120,10 +134,10 @@ export function parsePath (path: string): ParsedPath | null {
         i++ // skip '/'
         const fg = extractAlphanumeric()
         if (fg !== null) {
-            if (i === path.length && config.formats.has(fg)) {
+            if (i === path.length && options.formats.has(fg)) {
                 res.format = fg
             } else {
-                const color = parseColor(fg)
+                const color = parseColor(fg, options)
                 if (color) {
                     res.foreground = color
                 } else {
@@ -139,7 +153,7 @@ export function parsePath (path: string): ParsedPath | null {
     if (path[i] === '.') {
         i++ // skip '.'
         const format = extractAlphanumeric()
-        if (format !== null && config.formats.has(format)) {
+        if (format !== null && options.formats.has(format)) {
             res.format = format
         } else {
             i-- // rewind
@@ -168,7 +182,7 @@ export interface ParsedQuery {
     text?: string
 }
 
-export function parseQuery (query: string): ParsedQuery {
+export function parseQuery (query: string, config: Pick<ParserOptions, 'fonts'>): ParsedQuery {
     const q = new URLSearchParams(query)
 
     const res: ParsedQuery = {}
@@ -232,12 +246,12 @@ export interface ParsedURL {
     fontsize: number
 }
 
-export function parseURL (url: string): ParsedURL | null {
+export function parseURL (url: string, config: ParserOptions): ParsedURL | null {
     const urlObj = createURLObj(url, 'http://itdontmatter')
     if (! urlObj) {
         return null
     }
-    const path = parsePath(urlObj.pathname)
+    const path = parsePath(urlObj.pathname, config)
     if (! path) {
         return null
     }
@@ -251,7 +265,7 @@ export function parseURL (url: string): ParsedURL | null {
     const width = realWidth * scale
     const height = realHeight * scale
 
-    const query = parseQuery(urlObj.search)
+    const query = parseQuery(urlObj.search, config)
     const text = query.text ?? `${realWidth} x ${realHeight}`
     const font = query.font ?? config.defaultFont
     const fontsize = query.fontsize ?? Math.floor(Math.max(width, height) * 0.1)
