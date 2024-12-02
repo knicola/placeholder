@@ -11,17 +11,17 @@ export const config = {
     minScale: 1,
     maxScale: 3,
     formats: new Set(['svg', 'png', 'jpg', 'jpeg', 'gif', 'webp']),
-    fonts: new Map([
-        ['lato', 'Lato'],
-        ['lora', 'Lora'],
-        ['opensans', 'OpenSans'],
-        ['oswald', 'Oswald'],
-        ['playfairdisplay', 'PlayfairDisplay'],
-        ['ptsans', 'PTSans'],
-        ['raleway', 'Raleway'],
-        ['roboto', 'Roboto'],
-        ['sourcesans3', 'SourceSans3'],
-    ]),
+    fonts: new Map(Object.entries({
+        lato: 'Lato',
+        lora: 'Lora',
+        opensans: 'OpenSans',
+        oswald: 'Oswald',
+        playfairdisplay: 'PlayfairDisplay',
+        ptsans: 'PTSans',
+        raleway: 'Raleway',
+        roboto: 'Roboto',
+        sourcesans3: 'SourceSans3',
+    })),
     // https://www.w3.org/TR/css-color-4/#named-colors
     colors: new Map(Object.entries({
         aliceblue: 'f0f8ff',
