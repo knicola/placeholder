@@ -1,6 +1,10 @@
 import TextToSVG from 'text-to-svg'
 import sharp from 'sharp'
-import { PassThrough, Readable } from 'stream'
+import { PassThrough, type Readable } from 'node:stream'
+
+export const PlaceHolderFormats = ['svg', 'png', 'jpg', 'jpeg', 'gif', 'webp'] as const
+
+export type ImageFormat = typeof PlaceHolderFormats[number]
 
 export interface PlaceHolderOptions {
     height: number
@@ -13,6 +17,14 @@ export interface PlaceHolderOptions {
     format: ImageFormat
 }
 
+export function placeholder (options: PlaceHolderOptions): Readable | string {
+    const svg = generateSVGDocument(options)
+    if (options.format === 'svg') {
+        return svg
+    }
+    return convertSVGToImage(svg, options.format)
+}
+
 const cachedFonts = new Map<string, TextToSVG>()
 
 // @todo get path from config?
@@ -23,7 +35,8 @@ export function loadFonts (fonts: string[]): void {
     }
 }
 
-function generateSVGText (options: PlaceHolderOptions): string {
+type SVGTextOptions = Pick<PlaceHolderOptions, 'foreground' | 'text'>
+function generateSVGText (options: SVGTextOptions): string {
     const { foreground, text } = options
     return (
         `<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="${foreground}" font-family="Arial" font-size="24">` +
@@ -32,7 +45,8 @@ function generateSVGText (options: PlaceHolderOptions): string {
     )
 }
 
-function generateSVGPath (options: PlaceHolderOptions): string | null {
+type SVGPathOptions = Pick<PlaceHolderOptions, 'width' | 'height' | 'foreground' | 'text' | 'font' | 'fontsize'>
+function generateSVGPath (options: SVGPathOptions): string | null {
     const { width, height, foreground, text, font, fontsize } = options
 
     const ttsvg = cachedFonts.get(font)
@@ -49,7 +63,8 @@ function generateSVGPath (options: PlaceHolderOptions): string | null {
     })
 }
 
-export function generateSVGDocument (options: PlaceHolderOptions): string {
+export type SVGDocumentOptions = Omit<PlaceHolderOptions, 'format'>
+export function generateSVGDocument (options: SVGDocumentOptions): string {
     const { width, height, background } = options
     const path = generateSVGPath(options) ?? generateSVGText(options)
     return (
@@ -60,10 +75,6 @@ export function generateSVGDocument (options: PlaceHolderOptions): string {
     )
 }
 
-export const PlaceHolderFormats = ['svg', 'png', 'jpg', 'jpeg', 'gif', 'webp'] as const
-
-export type ImageFormat = typeof PlaceHolderFormats[number]
-
 export function convertSVGToImage (svg: string | Buffer, format: ImageFormat): Readable {
     const svgBuffer = Buffer.from(svg)
     const pt = new PassThrough()
@@ -71,12 +82,4 @@ export function convertSVGToImage (svg: string | Buffer, format: ImageFormat): R
         .toFormat(format as any)
         .pipe(pt)
     return pt
-}
-
-export function placeholder (options: PlaceHolderOptions): Readable | string {
-    const svg = generateSVGDocument(options)
-    if (options.format === 'svg') {
-        return svg
-    }
-    return convertSVGToImage(svg, options.format)
 }
