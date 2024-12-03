@@ -60,7 +60,7 @@ export function generateSVGDocument (options: PlaceHolderOptions): string {
     )
 }
 
-export const PlaceHolderFormats = ['svg', 'png', 'jpeg', 'gif', 'webp'] as const
+export const PlaceHolderFormats = ['svg', 'png', 'jpg', 'jpeg', 'gif', 'webp'] as const
 
 export type ImageFormat = typeof PlaceHolderFormats[number]
 
