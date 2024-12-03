@@ -7,13 +7,16 @@
     "type": "module",
     "main": "dist/index.js",
     "scripts": {
-      "test": "vitest run",
-      "dev": "tsx watch src/index.ts",
-      "start": "tsx src/index.ts"
+        "start": "tsx src/index.ts",
+        "dev": "tsx watch src/index.ts",
+        "test": "vitest run",
+        "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json"
     },
     "dependencies": {
         "sharp": "^0.33.5",
-        "text-to-svg": "^3.1.5"
+        "text-to-svg": "^3.1.5",
+        "yaml": "^2.6.1",
+        "zod": "^3.23.8"
     },
     "devDependencies": {
         "@knicola/dev-config": "^0.3.2",
@@ -21,8 +24,9 @@
         "@types/sharp": "^0.31.1",
         "@types/text-to-svg": "^3.1.4",
         "eslint": "^8.57.1",
+        "tsc-alias": "^1.8.10",
         "tsx": "^4.19.2",
-        "vitest": "^2.1.6",
-        "typescript": "^5.6.3"
+        "typescript": "^5.6.3",
+        "vitest": "^2.1.6"
     }
 }

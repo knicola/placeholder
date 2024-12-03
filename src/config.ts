@@ -1,4 +1,10 @@
-export const config = {
+import YAML from 'yaml'
+import { readFileSync } from 'node:fs'
+import { args } from './args'
+import { z } from 'zod'
+import { PlaceHolderFormats } from '@/placeholder'
+
+const defaults = {
     host: '0.0.0.0',
     port: 3000,
     defaultScale: 1,
@@ -10,20 +16,10 @@ export const config = {
     maxSize: 4000,
     minScale: 1,
     maxScale: 3,
-    formats: new Set(['svg', 'png', 'jpg', 'jpeg', 'gif', 'webp']),
-    fonts: new Map(Object.entries({
-        lato: 'Lato',
-        lora: 'Lora',
-        opensans: 'OpenSans',
-        oswald: 'Oswald',
-        playfairdisplay: 'PlayfairDisplay',
-        ptsans: 'PTSans',
-        raleway: 'Raleway',
-        roboto: 'Roboto',
-        sourcesans3: 'SourceSans3',
-    })),
+    formats: new Set<string>(PlaceHolderFormats),
+    fonts: new Map<string, string>(),
     // https://www.w3.org/TR/css-color-4/#named-colors
-    colors: new Map(Object.entries({
+    colors: new Map<string, string>(Object.entries({
         aliceblue: 'f0f8ff',
         antiquewhite: 'faebd7',
         aqua: '0ff',
@@ -174,4 +170,68 @@ export const config = {
         yellow: 'ff0',
         yellowgreen: '9acd32',
     })),
+}
+
+export const ConfigSchema = z.object({
+    host: z.string().optional(),
+    port: z.number().int().min(0).max(65535).optional(),
+    defaultScale: z.number().min(1).optional(),
+    defaultFont: z.string().optional(),
+    defaultBackground: z.string().optional(),
+    defaultForeground: z.string().optional(),
+    defaultFormat: z.enum(PlaceHolderFormats).optional(),
+    minSize: z.number().int().positive().optional(),
+    maxSize: z.number().int().positive().optional(),
+    minScale: z.number().min(1).optional(),
+    maxScale: z.number().min(1).optional(),
+    fontsDir: z.string().optional(),
+    fonts: z.record(z.string(), z.string()).transform((o) => new Map(Object.entries(o))).optional(),
+})
+
+type Config = z.infer<typeof ConfigSchema>
+
+const parsers: Record<string, (data: any) => any> = {
+    json: JSON.parse,
+    yml: YAML.parse,
+}
+
+function read (file: string): Record<string, unknown> {
+    const content = readFileSync(file, 'utf-8')
+    for (const parse of Object.values(parsers)) {
+        try {
+            return parse(content)
+        } catch { /* ignore */ }
+    }
+    // eslint-disable-next-line no-console
+    console.error('Invalid config file format', { file })
+    process.exit(1)
+}
+
+function validate (input: unknown): Config {
+    const { data, error } = ConfigSchema.safeParse(input)
+    if (error) {
+        // eslint-disable-next-line no-console
+        console.error(
+            'Invalid config file options',
+            JSON.stringify(error.flatten().fieldErrors, null, 2),
+        )
+        process.exit(1)
+    }
+    return data
+}
+
+export const config = defaults
+
+if (args.config) {
+    const data = validate(read(args.config))
+
+    Object.assign(config, data)
+}
+
+if (args.host) {
+    Object.assign(config, { host: args.host })
+}
+
+if (args.port) {
+    Object.assign(config, { port: args.port })
 }
