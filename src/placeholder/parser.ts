@@ -182,15 +182,15 @@ export interface ParsedQuery {
     text?: string
 }
 
-export function parseQuery (query: string, config: Pick<ParserOptions, 'fonts'>): ParsedQuery {
+export function parseQuery (query: string, options: Pick<ParserOptions, 'fonts'>): ParsedQuery {
     const q = new URLSearchParams(query)
 
     const res: ParsedQuery = {}
 
     // read optional font
     const font = q.get('font')
-    if (font !== null && config.fonts.has(font)) {
-        res.font = config.fonts.get(font)
+    if (font !== null && options.fonts.has(font)) {
+        res.font = options.fonts.get(font)
     }
 
     // read optional font size
@@ -246,28 +246,28 @@ export interface ParsedURL {
     fontsize: number
 }
 
-export function parseURL (url: string, config: ParserOptions): ParsedURL | null {
+export function parseURL (url: string, options: ParserOptions): ParsedURL | null {
     const urlObj = createURLObj(url, 'http://itdontmatter')
     if (! urlObj) {
         return null
     }
-    const path = parsePath(urlObj.pathname, config)
+    const path = parsePath(urlObj.pathname, options)
     if (! path) {
         return null
     }
 
-    const format = (path.format ?? config.defaultFormat) as ImageFormat
-    const background = path.background ?? config.defaultBackground
-    const foreground = path.foreground ?? (! path.background ? config.defaultForeground : getContrastColor(path.background))
-    const scale = clamp(path.scale ?? config.defaultScale, config.minScale, config.maxScale)
-    const realWidth = clamp(path.width, config.minSize, config.maxSize)
-    const realHeight = clamp(path.height ?? path.width, config.minSize, config.maxSize)
+    const format = (path.format ?? options.defaultFormat) as ImageFormat
+    const background = path.background ?? options.defaultBackground
+    const foreground = path.foreground ?? (! path.background ? options.defaultForeground : getContrastColor(path.background))
+    const scale = clamp(path.scale ?? options.defaultScale, options.minScale, options.maxScale)
+    const realWidth = clamp(path.width, options.minSize, options.maxSize)
+    const realHeight = clamp(path.height ?? path.width, options.minSize, options.maxSize)
     const width = realWidth * scale
     const height = realHeight * scale
 
-    const query = parseQuery(urlObj.search, config)
+    const query = parseQuery(urlObj.search, options)
     const text = query.text ?? `${realWidth} x ${realHeight}`
-    const font = query.font ?? config.defaultFont
+    const font = query.font ?? options.defaultFont
     const fontsize = query.fontsize ?? Math.floor(Math.max(width, height) * 0.1)
 
     return {
