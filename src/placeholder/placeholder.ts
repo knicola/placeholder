@@ -35,12 +35,23 @@ export function loadFonts (fonts: string[]): void {
     }
 }
 
+function htmlEscape (input: string): string {
+    const map: Record<string, string> = {
+        '&': '&amp;',
+        "'": '&apos;',
+        '"': '&quot;',
+        '>': '&gt;',
+        '<': '&lt;',
+    }
+    return input.replace(/[&'"<>]/g, char => map[char])
+}
+
 type SVGTextOptions = Pick<PlaceHolderOptions, 'foreground' | 'text' | 'fontsize'>
 function generateSVGText (options: SVGTextOptions): string {
     const { foreground, text, fontsize } = options
     return (
         `<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="${foreground}" font-family="Arial" font-size="${fontsize}">` +
-            `${text}` +
+            `${htmlEscape(text)}` +
         '</text>'
     )
 }
