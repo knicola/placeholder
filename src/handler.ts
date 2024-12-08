@@ -25,7 +25,7 @@ function write (
 }
 
 // Preload fonts
-loadFonts(config.fonts.values() as any)
+loadFonts(config.fonts, config.fontsDir)
 
 // The main request handler
 export function requestHandler (req: http.IncomingMessage, res: http.ServerResponse): void {

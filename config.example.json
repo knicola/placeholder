@@ -10,16 +10,16 @@
   "minScale": 1,
   "maxScale": 3,
   "fontsDir": "./fonts",
-  "defaultFont": "Lato",
+  "defaultFont": "lato",
   "fonts": {
-    "lato": "Lato",
-    "lora": "Lora",
-    "opensans": "OpenSans",
-    "oswald": "Oswald",
-    "playfairdisplay": "PlayfairDisplay",
-    "ptsans": "PTSans",
-    "raleway": "Raleway",
-    "roboto": "Roboto",
-    "sourcesans3": "SourceSans3"
+    "lato": "Lato-Bold.ttf",
+    "lora": "Lora-Bold.ttf",
+    "opensans": "OpenSans-Bold.ttf",
+    "oswald": "Oswald-Bold.ttf",
+    "playfairdisplay": "PlayfairDisplay-Bold.ttf",
+    "ptsans": "PTSans-Bold.ttf",
+    "raleway": "Raleway-Bold.ttf",
+    "roboto": "Roboto-Bold.ttf",
+    "sourcesans3": "SourceSans3-Bold.ttf"
   }
 }

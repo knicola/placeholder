@@ -1,6 +1,7 @@
 import TextToSVG from 'text-to-svg'
 import sharp from 'sharp'
 import { PassThrough, type Readable } from 'node:stream'
+import { resolve } from 'node:path'
 
 export const PlaceHolderFormats = ['svg', 'png', 'jpg', 'jpeg', 'gif', 'webp'] as const
 
@@ -27,10 +28,9 @@ export function placeholder (options: PlaceHolderOptions): Readable | string {
 
 const cachedFonts = new Map<string, TextToSVG>()
 
-// @todo get path from config?
-export function loadFonts (fonts: string[]): void {
-    for (const name of fonts) {
-        const font = TextToSVG.loadSync(`./fonts/${name}-Bold.ttf`)
+export function loadFonts (fonts: Map<string, string>, dir?: string): void {
+    for (const [name, file] of fonts) {
+        const font = TextToSVG.loadSync(dir ? resolve(dir, file) : resolve(file))
         cachedFonts.set(name, font)
     }
 }
