@@ -17,6 +17,7 @@ const defaults = {
     minScale: 1,
     maxScale: 3,
     formats: new Set<string>(PlaceHolderFormats),
+    fontsDir: undefined as string | undefined,
     fonts: new Map<string, string>(),
     // https://www.w3.org/TR/css-color-4/#named-colors
     colors: new Map<string, string>(Object.entries({
