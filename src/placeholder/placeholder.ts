@@ -35,11 +35,11 @@ export function loadFonts (fonts: string[]): void {
     }
 }
 
-type SVGTextOptions = Pick<PlaceHolderOptions, 'foreground' | 'text'>
+type SVGTextOptions = Pick<PlaceHolderOptions, 'foreground' | 'text' | 'fontsize'>
 function generateSVGText (options: SVGTextOptions): string {
-    const { foreground, text } = options
+    const { foreground, text, fontsize } = options
     return (
-        `<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="${foreground}" font-family="Arial" font-size="24">` +
+        `<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="${foreground}" font-family="Arial" font-size="${fontsize}">` +
             `${text}` +
         '</text>'
     )
