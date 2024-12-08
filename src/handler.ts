@@ -59,7 +59,7 @@ export function requestHandler (req: http.IncomingMessage, res: http.ServerRespo
     }
 
     convertSVGToImage(svg, format as any)
-        .on('data', () => {
+        .once('data', () => {
             if (! res.headersSent) {
                 res.writeHead(200, {
                     'Content-Type': `image/${format}`,
