@@ -1,6 +1,6 @@
 import { parseArgs } from 'node:util'
 import { z } from 'zod'
-import { logger } from './logger'
+import { logger } from '@/logger'
 
 const input = parseArgs({
     strict: false,

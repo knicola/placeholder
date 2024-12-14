@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs'
 import { args } from '@/args'
 import { z } from 'zod'
 import { PlaceHolderFormats } from '@/placeholder'
-import { logger } from './logger'
+import { logger } from '@/logger'
 
 const defaults = {
     host: '0.0.0.0',

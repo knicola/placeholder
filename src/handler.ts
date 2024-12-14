@@ -7,7 +7,7 @@ import {
     generateSVGDocument,
     convertSVGToImage,
 } from '@/placeholder'
-import { logger } from './logger'
+import { logger } from '@/logger'
 
 // Utility function to send responses
 function write (
