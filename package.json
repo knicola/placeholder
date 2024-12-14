@@ -24,6 +24,7 @@
         "@types/node": "^22.7.5",
         "@types/sharp": "^0.31.1",
         "@types/text-to-svg": "^3.1.4",
+        "@vitest/coverage-v8": "^2.1.8",
         "eslint": "^8.57.1",
         "tsc-alias": "^1.8.10",
         "tsx": "^4.19.2",

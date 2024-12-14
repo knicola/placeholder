@@ -7,5 +7,8 @@ export default defineConfig({
         alias: {
             '@': path.resolve(__dirname, 'src'),
         },
+        coverage: {
+            enabled: true,
+        },
     },
 })
