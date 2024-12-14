@@ -21,4 +21,5 @@ COPY --chown=${USER}:${GROUP} --from=build /build/package.json ./package.json
 COPY --chown=${USER}:${GROUP} --from=build /build/npm-shrinkwrap.json ./npm-shrinkwrap.json
 USER ${USER}
 RUN npm prune --omit=dev
+EXPOSE 3000
 CMD ["node", "dist/index.js"]
