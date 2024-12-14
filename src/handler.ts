@@ -1,6 +1,5 @@
-/* eslint-disable no-console */
-import { Readable } from 'stream'
-import http from 'http'
+import { Readable } from 'node:stream'
+import http from 'node:http'
 import { config } from '@/config'
 import {
     loadFonts,
@@ -8,6 +7,7 @@ import {
     generateSVGDocument,
     convertSVGToImage,
 } from '@/placeholder'
+import { logger } from './logger'
 
 // Utility function to send responses
 function write (
@@ -69,7 +69,7 @@ export function requestHandler (req: http.IncomingMessage, res: http.ServerRespo
             }
         })
         .on('error', (err) => {
-            console.error('Error rendering image', { err, options })
+            logger.error('Error rendering image', { err, options })
             if (! res.headersSent) {
                 res.writeHead(500, { 'Content-Type': 'text/plain' })
                 res.end('Internal Server Error')

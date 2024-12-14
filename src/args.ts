@@ -1,5 +1,6 @@
-import { parseArgs } from 'util'
+import { parseArgs } from 'node:util'
 import { z } from 'zod'
+import { logger } from './logger'
 
 const input = parseArgs({
     strict: false,
@@ -30,8 +31,7 @@ type Args = z.infer<typeof ArgsSchema>
 const { data, error } = ArgsSchema.safeParse(input.values)
 
 if (error) {
-    // eslint-disable-next-line no-console
-    console.error(
+    logger.error(
         'Invalid argument',
         JSON.stringify(error.flatten().fieldErrors, null, 2),
     )

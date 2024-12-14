@@ -1,8 +1,9 @@
 import YAML from 'yaml'
 import { readFileSync } from 'node:fs'
-import { args } from './args'
+import { args } from '@/args'
 import { z } from 'zod'
 import { PlaceHolderFormats } from '@/placeholder'
+import { logger } from './logger'
 
 const defaults = {
     host: '0.0.0.0',
@@ -203,16 +204,14 @@ function read (file: string): Record<string, unknown> {
             return parse(content)
         } catch { /* ignore */ }
     }
-    // eslint-disable-next-line no-console
-    console.error('Invalid config file format', { file })
+    logger.error('Invalid config file format', { file })
     process.exit(1)
 }
 
 function validate (input: unknown): Config {
     const { data, error } = ConfigSchema.safeParse(input)
     if (error) {
-        // eslint-disable-next-line no-console
-        console.error(
+        logger.error(
             'Invalid config file options',
             JSON.stringify(error.flatten().fieldErrors, null, 2),
         )
