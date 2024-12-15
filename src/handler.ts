@@ -34,6 +34,10 @@ const mimeTypes = {
     webp: 'image/webp',
 }
 
+function getCacheControl (): string {
+    return config.cacheTTL ? `public, max-age=${config.cacheTTL}, immutable` : 'no-cache'
+}
+
 export function requestHandler (req: http.IncomingMessage, res: http.ServerResponse): void {
     if (req.method !== 'GET') {
         return write(res, 'Method Not Allowed', 405)
@@ -58,7 +62,7 @@ export function requestHandler (req: http.IncomingMessage, res: http.ServerRespo
     if (format === 'svg') {
         res.writeHead(200, {
             'Content-Type': mimeTypes.svg,
-            'Cache-Control': 'public, max-age=31536000, immutable',
+            'Cache-Control': getCacheControl(),
         })
         res.end(svg)
         return
@@ -70,7 +74,7 @@ export function requestHandler (req: http.IncomingMessage, res: http.ServerRespo
                 res.writeHead(200, {
                     'Content-Type': mimeTypes[format],
                     'Transfer-Encoding': 'chunked',
-                    'Cache-Control': 'public, max-age=31536000, immutable',
+                    'Cache-Control': getCacheControl(),
                 })
             }
         })

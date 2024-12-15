@@ -9,6 +9,7 @@ import { resolve } from 'node:path'
 const defaults = {
     host: '0.0.0.0',
     port: 3000,
+    cacheTTL: 0,
     defaultScale: 1,
     defaultFont: 'lato',
     defaultBackground: '#dddddd',
