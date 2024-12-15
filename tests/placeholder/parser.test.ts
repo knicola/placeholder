@@ -166,7 +166,7 @@ describe('parseURL', () => {
         it('should parse font from query string', () => {
             const url = '300x200?font=verdana'
             const result = parseURL(url, options)
-            expect(result?.font).toBe('Verdana')
+            expect(result?.font).toBe('verdana')
         })
 
         it('should parse fontsize from query string', () => {

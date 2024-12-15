@@ -190,7 +190,7 @@ export function parseQuery (query: string, options: Pick<ParserOptions, 'fonts'>
     // read optional font
     const font = q.get('font')
     if (font !== null && options.fonts.has(font)) {
-        res.font = options.fonts.get(font)
+        res.font = font
     }
 
     // read optional font size
