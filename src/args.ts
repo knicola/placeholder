@@ -1,6 +1,7 @@
 import { parseArgs } from 'node:util'
 import { z } from 'zod'
 import { logger } from '@/logger'
+import { existsSync } from 'node:fs'
 
 const input = parseArgs({
     strict: false,
@@ -21,9 +22,9 @@ const input = parseArgs({
 })
 
 const ArgsSchema = z.object({
-    config: z.string().optional(),
+    config: z.string().refine((value) => existsSync(value), 'File does not exist').optional(),
     host: z.string().optional(),
-    port: z.coerce.number().optional(),
+    port: z.coerce.number().min(1).max(65535).optional(),
 })
 
 type Args = z.infer<typeof ArgsSchema>
