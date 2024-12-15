@@ -1,9 +1,10 @@
 import YAML from 'yaml'
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { args } from '@/args'
 import { z } from 'zod'
 import { PlaceHolderFormats } from '@/placeholder'
 import { logger } from '@/logger'
+import { resolve } from 'node:path'
 
 const defaults = {
     host: '0.0.0.0',
@@ -177,17 +178,42 @@ const defaults = {
 export const ConfigSchema = z.object({
     host: z.string().optional(),
     port: z.number().int().min(0).max(65535).optional(),
-    defaultScale: z.number().min(1).optional(),
-    defaultFont: z.string().optional(),
-    defaultBackground: z.string().optional(),
-    defaultForeground: z.string().optional(),
+    defaultBackground: z.union([
+        z.string().regex(/^#?[0-9a-f]{3,6}$/i, 'Invalid color'),
+        z.string().refine((value) => defaults.colors.has(value)),
+    ]).optional(),
+    defaultForeground: z.union([
+        z.string().regex(/^#?[0-9a-f]{3,6}$/i, 'Invalid color'),
+        z.string().refine((value) => defaults.colors.has(value)),
+    ]).optional(),
     defaultFormat: z.enum(PlaceHolderFormats).optional(),
     minSize: z.number().int().positive().optional(),
     maxSize: z.number().int().positive().optional(),
     minScale: z.number().min(1).optional(),
     maxScale: z.number().min(1).optional(),
-    fontsDir: z.string().optional(),
+    defaultScale: z.number().min(1).optional(),
+    fontsDir: z.string().refine((value) => existsSync(value), 'Directory does not exist').optional(),
     fonts: z.record(z.string(), z.string()).transform((o) => new Map(Object.entries(o))).optional(),
+    defaultFont: z.string().optional(),
+}).superRefine((data, ctx) => {
+    if (data.defaultFont && ! data.fonts?.has(data.defaultFont)) {
+        ctx.addIssue({
+            path: ['defaultFont'],
+            code: z.ZodIssueCode.custom,
+            message: `Font '${data.defaultFont}' is not defined in the 'fonts' option`,
+        })
+    }
+
+    for (const [font, file] of data.fonts || []) {
+        const path = data.fontsDir ? resolve(data.fontsDir, file) : resolve(file)
+        if (! existsSync(path)) {
+            ctx.addIssue({
+                path: ['fonts', 'fontsDir'],
+                code: z.ZodIssueCode.custom,
+                message: `Font '${font}' file '${path}' does not exist`,
+            })
+        }
+    }
 })
 
 type Config = z.infer<typeof ConfigSchema>
@@ -197,19 +223,22 @@ const parsers: Record<string, (data: any) => any> = {
     yml: YAML.parse,
 }
 
-function read (file: string): Record<string, unknown> {
+export function load (file: string): Config {
     const content = readFileSync(file, 'utf-8')
+    let parsed: unknown
     for (const parse of Object.values(parsers)) {
         try {
-            return parse(content)
+            parsed = parse(content)
+            break
         } catch { /* ignore */ }
     }
-    logger.error('Invalid config file format', { file })
-    process.exit(1)
-}
 
-function validate (input: unknown): Config {
-    const { data, error } = ConfigSchema.safeParse(input)
+    if (typeof parsed !== 'object') {
+        logger.error('Invalid config file format', { file })
+        process.exit(1)
+    }
+
+    const { data, error } = ConfigSchema.safeParse(parsed)
     if (error) {
         logger.error(
             'Invalid config file options',
@@ -217,13 +246,14 @@ function validate (input: unknown): Config {
         )
         process.exit(1)
     }
+
     return data
 }
 
 export const config = defaults
 
 if (args.config) {
-    const data = validate(read(args.config))
+    const data = load(args.config)
 
     Object.assign(config, data)
 }
