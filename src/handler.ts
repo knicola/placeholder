@@ -9,7 +9,6 @@ import {
 } from '@/placeholder'
 import { logger } from '@/logger'
 
-// Utility function to send responses
 function write (
     res: http.ServerResponse,
     body: string | Buffer | Readable,
@@ -24,10 +23,17 @@ function write (
     }
 }
 
-// Preload fonts
 loadFonts(config.fonts, config.fontsDir)
 
-// The main request handler
+const mimeTypes = {
+    svg: 'image/svg+xml',
+    png: 'image/png',
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    gif: 'image/gif',
+    webp: 'image/webp',
+}
+
 export function requestHandler (req: http.IncomingMessage, res: http.ServerResponse): void {
     if (req.method !== 'GET') {
         return write(res, 'Method Not Allowed', 405)
@@ -51,7 +57,7 @@ export function requestHandler (req: http.IncomingMessage, res: http.ServerRespo
 
     if (format === 'svg') {
         res.writeHead(200, {
-            'Content-Type': 'image/svg+xml',
+            'Content-Type': mimeTypes.svg,
             'Cache-Control': 'public, max-age=31536000, immutable',
         })
         res.end(svg)
@@ -62,7 +68,7 @@ export function requestHandler (req: http.IncomingMessage, res: http.ServerRespo
         .once('data', () => {
             if (! res.headersSent) {
                 res.writeHead(200, {
-                    'Content-Type': `image/${format}`,
+                    'Content-Type': mimeTypes[format],
                     'Transfer-Encoding': 'chunked',
                     'Cache-Control': 'public, max-age=31536000, immutable',
                 })
