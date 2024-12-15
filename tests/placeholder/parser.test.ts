@@ -128,6 +128,18 @@ describe('parseURL', () => {
             const result = parseURL(url, options)
             expect(result).toBeNull()
         })
+
+        it('should clamp width to max size after scale is applied', () => {
+            const url = '600x400@2x'
+            const result = parseURL(url, options)
+            expect(result?.width).toBe(options.maxSize)
+        })
+
+        it('should clamp height to max size after scale is applied', () => {
+            const url = '400x600@2x'
+            const result = parseURL(url, options)
+            expect(result?.height).toBe(options.maxSize)
+        })
     })
 
     describe('format', () => {

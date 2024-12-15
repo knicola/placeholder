@@ -262,8 +262,8 @@ export function parseURL (url: string, options: ParserOptions): ParsedURL | null
     const scale = clamp(path.scale ?? options.defaultScale, options.minScale, options.maxScale)
     const realWidth = clamp(path.width, options.minSize, options.maxSize)
     const realHeight = clamp(path.height ?? path.width, options.minSize, options.maxSize)
-    const width = realWidth * scale
-    const height = realHeight * scale
+    const width = Math.min(realWidth * scale, options.maxSize)
+    const height = Math.min(realHeight * scale, options.maxSize)
 
     const query = parseQuery(urlObj.search, options)
     const text = query.text ?? `${realWidth} x ${realHeight}`
