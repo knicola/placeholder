@@ -10,6 +10,8 @@ const defaults = {
     host: '0.0.0.0',
     port: 3000,
     cacheTTL: 0,
+    rateLimitMaxRequests: 100,
+    rateLimitWindowMs: 60e3,
     defaultScale: 1,
     defaultFont: 'lato',
     defaultBackground: '#dddddd',
