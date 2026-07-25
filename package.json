@@ -14,7 +14,7 @@
     },
     "dependencies": {
         "exit-hook": "^4.0.0",
-        "sharp": "^0.33.5",
+        "sharp": "^0.35.0",
         "text-to-svg": "^3.1.5",
         "yaml": "^2.6.1",
         "zod": "^3.23.8"
